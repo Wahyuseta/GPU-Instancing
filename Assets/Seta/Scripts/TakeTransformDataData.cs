@@ -140,14 +140,7 @@ public class TakeTransformData : EditorWindow
     {
         if (t.GetComponent<MeshFilter>() != null)
         {
-            //if (t.name.Contains("Cliff"))
-            //{
-                //scales.Add(t.parent.localScale);
-            //}
-            //else
-            //{
-            scales.Add(t.localScale);
-            //}
+            scales.Add(CheckTrueScale(t, t.localScale));
             positions.Add(t.position);
             rotations.Add(t.rotation);
             return true;
@@ -167,6 +160,20 @@ public class TakeTransformData : EditorWindow
             if (child.childCount > 0)
                 CheckChildrens(child);
         }
+    }
+
+    Vector3 CheckTrueScale(Transform t, Vector3 currentScale)
+    {
+        Vector3 newScale = currentScale;
+
+        if (t.parent != null)
+        {
+            newScale = Vector3.Scale(newScale, t.parent.localScale);
+            var scalledScale = CheckTrueScale(t.parent, newScale);
+            newScale = scalledScale;
+        }
+
+        return newScale;
     }
 
     /// <summary>
