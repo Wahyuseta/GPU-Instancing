@@ -193,7 +193,7 @@ public class TakeTransformData : EditorWindow
             });
         }
 
-        string path = Application.dataPath + $"/Transform Data/{objectToScan}_{dataContainer}_{fileName}.txt";
+        string path = Application.dataPath + $"/Seta/TransformDataTxt/{objectToScan}_{dataContainer}_{fileName}.txt";
         File.WriteAllText(path, "");
 
         dataContainer.transformDatas = new TransformData[datas.Length];
