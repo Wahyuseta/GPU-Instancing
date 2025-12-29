@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -26,10 +27,10 @@ public class EnableGPUInstancing : EditorWindow
             EnableMaterialGPUInstancing();
         }
 
-        GUILayout.Space(50);
+        GUILayout.Space(20);
 
         GUILayout.Label("Folder to scan", EditorStyles.boldLabel);
-        folderToScan = EditorGUILayout.ObjectField(objectToScan, typeof(object), true);
+        folderToScan = EditorGUILayout.ObjectField(folderToScan, typeof(UnityEngine.Object), true);
 
         if (GUILayout.Button("Search and Enable Material GPU Instancing"))
         {
@@ -56,7 +57,23 @@ public class EnableGPUInstancing : EditorWindow
 
     void SearchMaterial()
     {
+        string folderPath = AssetDatabase.GetAssetPath(folderToScan);
 
+        if (!AssetDatabase.IsValidFolder(folderPath))
+        {
+            Debug.LogError($"Invalid folder path: {folderPath}");
+            return;
+        }
+
+        foreach (var guid in AssetDatabase.FindAssets("t:Material", new[] { folderPath }))
+        {
+            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+            Material material = AssetDatabase.LoadAssetAtPath<Material>(assetPath);
+            if (material != null)
+            {
+                material.enableInstancing = true;
+            }
+        }
     }
 }
 
